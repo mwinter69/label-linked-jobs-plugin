@@ -1,0 +1,41 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form">
+  <script>
+    function showAllLabels_${data.computer.displayName}() {
+      labelDiv = document.getElementById("all_labels_${data.computer.displayName}");
+      shortlabelDiv = document.getElementById("short_labels_${data.computer.displayName}");
+      if (labelDiv.style.display == "block") {
+      	labelDiv.style.display="none";
+      	labelDiv.style.visibility="hidden";
+      	shortlabelDiv.style.display="block";
+      	shortlabelDiv.style.visibility="visible";
+      	
+      } else {
+      	labelDiv.style.display="block";
+      	labelDiv.style.visibility="visible";
+      	shortlabelDiv.style.display="none";
+      	shortlabelDiv.style.visibility="hidden";
+      }
+    }
+    
+  </script>
+  <td align="right">
+    <j:set var="count" value="0"/>
+    <span id="short_labels_${data.computer.displayName}">
+    <j:forEach var="entry" items="${data.getLabels()}">
+      <j:if test="${count &lt; from.maxLabelCount || from.maxLabelCount &lt; 0}">
+        <a class="model-link inside" href="${rootURL}/label/${entry.name}">${entry.name}</a>
+      </j:if>
+      <j:set var="count" value="${count + 1}"/>
+    </j:forEach>
+    </span>
+    <j:if test="${data.labels.size() &gt; from.maxLabelCount}">
+        <span onclick="showAllLabels_${data.computer.displayName}()">all</span>
+    </j:if>
+    <div id="all_labels_${data.computer.displayName}" style="visibility:hidden; display: none" >
+      <j:forEach var="entry" items="${data.getLabels()}">
+        <a class="model-link inside" href="${rootURL}/label/${entry.name}">${entry.name}</a><br/>
+  	  </j:forEach>
+  	</div>
+  </td>
+</j:jelly>
